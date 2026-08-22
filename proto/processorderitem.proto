@@ -1,0 +1,15 @@
+syntax = "proto3";
+package processorderitem;
+
+message ProcessOrderItemRequest {
+  string order_id = 1;
+  string item_id = 2;
+  string sku = 3;
+  int32 quantity = 4;
+}
+
+message ProcessOrderItemResponse {
+  int32 available_qty = 1;
+  bool reserved = 2;
+  string status = 3;
+}
