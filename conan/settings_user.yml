@@ -1,0 +1,7 @@
+compiler:
+  apple-clang:
+    sanitizer: [null, Address, Thread]
+  clang:
+    sanitizer: [null, Address, Thread]
+  gcc:
+    sanitizer: [null, Address, Thread]

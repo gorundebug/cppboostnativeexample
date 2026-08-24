@@ -4,12 +4,15 @@ services:
     build:
       context: .
       target: inventoryservice
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
       args:
-        SERVICEGEN_GRPC_SOURCE_STAGE: grpc-source
-        SERVICEGEN_ASIO_GRPC_SOURCE_STAGE: asio-grpc-source
-      additional_contexts:
-        grpc-source: ${SERVICEGEN_GRPC_SOURCE_CONTEXT:-.}
-        asio-grpc-source: ${SERVICEGEN_ASIO_GRPC_SOURCE_CONTEXT:-.}
+        SERVICEGEN_APT_UBUNTU_ARCHIVE_URL: ${SERVICEGEN_APT_UBUNTU_ARCHIVE_URL:-}
+        SERVICEGEN_APT_UBUNTU_SECURITY_URL: ${SERVICEGEN_APT_UBUNTU_SECURITY_URL:-}
+        SERVICEGEN_APT_UBUNTU_PORTS_URL: ${SERVICEGEN_APT_UBUNTU_PORTS_URL:-}
+        SERVICEGEN_CONAN_REMOTE_URL: ${SERVICEGEN_CONAN_REMOTE_URL:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+        PIP_TRUSTED_HOST: ${PIP_TRUSTED_HOST:-}
     environment:
       NATIVE_WORKER_THREADS: ${BENCHMARK_SERVICE_CORES:-2}
       INVENTORY_SERVICE_RESPONSE_DELAY: ${INVENTORY_SERVICE_RESPONSE_DELAY:-0s}
@@ -25,12 +28,15 @@ services:
     build:
       context: .
       target: orderservice
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
       args:
-        SERVICEGEN_GRPC_SOURCE_STAGE: grpc-source
-        SERVICEGEN_ASIO_GRPC_SOURCE_STAGE: asio-grpc-source
-      additional_contexts:
-        grpc-source: ${SERVICEGEN_GRPC_SOURCE_CONTEXT:-.}
-        asio-grpc-source: ${SERVICEGEN_ASIO_GRPC_SOURCE_CONTEXT:-.}
+        SERVICEGEN_APT_UBUNTU_ARCHIVE_URL: ${SERVICEGEN_APT_UBUNTU_ARCHIVE_URL:-}
+        SERVICEGEN_APT_UBUNTU_SECURITY_URL: ${SERVICEGEN_APT_UBUNTU_SECURITY_URL:-}
+        SERVICEGEN_APT_UBUNTU_PORTS_URL: ${SERVICEGEN_APT_UBUNTU_PORTS_URL:-}
+        SERVICEGEN_CONAN_REMOTE_URL: ${SERVICEGEN_CONAN_REMOTE_URL:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+        PIP_TRUSTED_HOST: ${PIP_TRUSTED_HOST:-}
     environment:
       NATIVE_WORKER_THREADS: ${BENCHMARK_SERVICE_CORES:-2}
       INVENTORY_SERVICE_API_ADDRESS: ${INVENTORY_SERVICE_API_ADDRESS:-dns:///inventoryservice:9202}

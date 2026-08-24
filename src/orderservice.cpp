@@ -3,6 +3,7 @@
 #include <agrpc/client_rpc.hpp>
 #include <boost/asio/use_awaitable.hpp>
 #include <boost/json.hpp>
+#include <boost/system/system_error.hpp>
 #include <grpcpp/create_channel.h>
 
 #include <array>
@@ -68,11 +69,14 @@ inline boost::json::value MakeResponse(
     boost::json::object item{
         {"item_id", result.item.item_id},
         {"sku", result.item.sku},
+        {"order_id", order_id},
+        {"requested_qty", result.item.quantity},
+        {"unit_price", result.item.unit_price},
         {"available_qty", result.available_qty},
         {"reserved", result.reserved},
         {"status", result.status},
+        {"error", result.error},
     };
-    if (!result.error.empty()) item["error"] = result.error;
     confirmed.push_back(std::move(item));
   }
   if (!confirmed.empty()) {
@@ -197,7 +201,7 @@ class OrderHandler final {
                                   all_reserved ? "CONFIRMED"
                                                : "PARTIALLY_CONFIRMED",
                                   total, results));
-    } catch (const boost::json::system_error& error) {
+    } catch (const boost::system::system_error& error) {
       co_return Error(400, error.what());
     } catch (const std::out_of_range& error) {
       co_return Error(400, error.what());

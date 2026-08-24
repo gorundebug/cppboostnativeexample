@@ -10,7 +10,8 @@ cleanup() {
 trap cleanup EXIT
 
 docker build --target test -t cppboostnativeexample-test:latest .
-docker compose up --detach --build
+docker compose build
+docker compose up --detach --no-build
 
 ready=0
 for attempt in $(seq 1 60); do
