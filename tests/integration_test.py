@@ -33,9 +33,8 @@ def main() -> None:
     assert confirmed["status"] == "CONFIRMED"
     assert confirmed["total_amount"] == 21
     assert confirmed["confirmed_items"] == [{
-        "item_id": "item-1", "sku": "SKU-001", "order_id": "native-confirmed",
-        "requested_qty": 2, "unit_price": 10.5, "available_qty": 2,
-        "reserved": True, "status": "CONFIRMED", "error": "",
+        "item_id": "item-1", "sku": "SKU-001", "available_qty": 2,
+        "reserved": True, "status": "CONFIRMED",
     }]
     out_of_stock = process(
         "native-out-of-stock",

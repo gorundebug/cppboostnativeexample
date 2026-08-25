@@ -69,14 +69,13 @@ inline boost::json::value MakeResponse(
     boost::json::object item{
         {"item_id", result.item.item_id},
         {"sku", result.item.sku},
-        {"order_id", order_id},
-        {"requested_qty", result.item.quantity},
-        {"unit_price", result.item.unit_price},
         {"available_qty", result.available_qty},
         {"reserved", result.reserved},
         {"status", result.status},
-        {"error", result.error},
     };
+    if (!result.error.empty()) {
+      item["error"] = result.error;
+    }
     confirmed.push_back(std::move(item));
   }
   if (!confirmed.empty()) {
