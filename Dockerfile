@@ -32,19 +32,24 @@ RUN CONAN_VERSION="$(python3 /tmp/dependencies_generated.py conan)" \
 ENV PATH=/opt/conan/bin:$PATH
 ENV CONAN_HOME=/conan
 WORKDIR /workspace
-COPY CMakeLists.txt conanfile.py ./
+COPY conanfile.py ./
 COPY conan ./conan
-COPY proto ./proto
-COPY scripts ./scripts
-COPY src ./src
-COPY tests ./tests
+COPY scripts/conan-configure-remotes.sh scripts/conan-install.sh scripts/run_with_progress.sh ./scripts/
 
-FROM build-base AS release-build
+FROM build-base AS release-dependencies
 RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
     --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
     ./scripts/run_with_progress.sh "Conan Release install" \
-      ./scripts/conan-install.sh Release /workspace/build/conan-release \
-    && conan_toolchain="$(cat build/conan-release/toolchain.path)" \
+      ./scripts/conan-install.sh Release /workspace/build/conan-release
+
+FROM release-dependencies AS release-build
+COPY CMakeLists.txt ./
+COPY proto ./proto
+COPY scripts ./scripts
+COPY src ./src
+RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
+    --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
+    conan_toolchain="$(cat build/conan-release/toolchain.path)" \
     && ./scripts/run_with_progress.sh "Release configure" \
       cmake -S . -B build-release -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
@@ -54,12 +59,21 @@ RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cach
       cmake --build build-release \
         --target inventoryservice orderservice inventoryservice_cq --parallel
 
-FROM build-base AS test
+FROM build-base AS debug-dependencies
 RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
     --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
     ./scripts/run_with_progress.sh "Conan Debug install" \
-      ./scripts/conan-install.sh Debug /workspace/build/conan-debug \
-    && conan_toolchain="$(cat build/conan-debug/toolchain.path)" \
+      ./scripts/conan-install.sh Debug /workspace/build/conan-debug
+
+FROM debug-dependencies AS test
+COPY CMakeLists.txt ./
+COPY proto ./proto
+COPY scripts ./scripts
+COPY src ./src
+COPY tests ./tests
+RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
+    --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
+    conan_toolchain="$(cat build/conan-debug/toolchain.path)" \
     && ./scripts/run_with_progress.sh "Debug configure" \
       cmake -S . -B build-debug -G Ninja \
         -DCMAKE_BUILD_TYPE=Debug \
@@ -69,12 +83,26 @@ RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cach
       cmake --build build-debug --parallel \
     && ctest --test-dir build-debug --output-on-failure
 
-FROM build-base AS asan-test
+FROM build-base AS asan-dependencies
 RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
     --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
     ./scripts/run_with_progress.sh "Conan ASan/UBSan install" \
       ./scripts/conan-install.sh RelWithDebInfo /workspace/build/conan-asan \
-    && conan_toolchain="$(cat build/conan-asan/toolchain.path)" \
+        -s:h compiler.sanitizer=Address \
+        -c:h 'tools.build:cflags=["-fsanitize=address,undefined","-fno-omit-frame-pointer"]' \
+        -c:h 'tools.build:cxxflags=["-fsanitize=address,undefined","-fno-omit-frame-pointer"]' \
+        -c:h 'tools.build:exelinkflags=["-fsanitize=address,undefined"]' \
+        -c:h 'tools.build:sharedlinkflags=["-fsanitize=address,undefined"]'
+
+FROM asan-dependencies AS asan-test
+COPY CMakeLists.txt ./
+COPY proto ./proto
+COPY scripts ./scripts
+COPY src ./src
+COPY tests ./tests
+RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
+    --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
+    conan_toolchain="$(cat build/conan-asan/toolchain.path)" \
     && ./scripts/run_with_progress.sh "ASan/UBSan configure" \
       cmake -S . -B build-asan -G Ninja \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -89,7 +117,7 @@ RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cach
        ctest --test-dir build-asan --output-on-failure \
     && ./scripts/sanitizer_integration.sh build-asan asan
 
-FROM build-base AS tsan-test
+FROM build-base AS tsan-dependencies
 RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
     --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
     ./scripts/run_with_progress.sh "Conan TSan install" \
@@ -98,8 +126,17 @@ RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cach
         -c:h 'tools.build:cflags=["-fsanitize=thread","-fno-omit-frame-pointer"]' \
         -c:h 'tools.build:cxxflags=["-fsanitize=thread","-fno-omit-frame-pointer"]' \
         -c:h 'tools.build:exelinkflags=["-fsanitize=thread"]' \
-        -c:h 'tools.build:sharedlinkflags=["-fsanitize=thread"]' \
-    && conan_toolchain="$(cat build/conan-tsan/toolchain.path)" \
+        -c:h 'tools.build:sharedlinkflags=["-fsanitize=thread"]'
+
+FROM tsan-dependencies AS tsan-test
+COPY CMakeLists.txt ./
+COPY proto ./proto
+COPY scripts ./scripts
+COPY src ./src
+COPY tests ./tests
+RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
+    --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
+    conan_toolchain="$(cat build/conan-tsan/toolchain.path)" \
     && ./scripts/run_with_progress.sh "TSan configure" \
       cmake -S . -B build-tsan -G Ninja \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \

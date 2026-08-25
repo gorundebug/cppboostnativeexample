@@ -18,6 +18,10 @@ class CppBoostNativeExampleConan(ConanFile):
 
     def configure(self):
         self.options["boost"].shared = False
+        # Conan's Boost package config declares every component target. Keep
+        # the test library present so loading BoostConfig.cmake never refers to
+        # a component artifact omitted from the package.
+        self.options["boost"].without_test = False
         self.options["grpc"].shared = False
         self.options["grpc"].codegen = True
         self.options["asio-grpc"].backend = "boost"
