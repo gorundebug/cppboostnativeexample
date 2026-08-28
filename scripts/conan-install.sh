@@ -55,7 +55,7 @@ conan install "$root" \
   --output-folder="$output_dir" \
   "${@:3}"
 
-toolchain="$output_dir/conan_toolchain.cmake"
+toolchain="$output_dir/build/$build_type/generators/conan_toolchain.cmake"
 if [[ ! -f "$toolchain" ]]; then
   echo "Conan toolchain is missing: $toolchain" >&2
   exit 2

@@ -34,7 +34,8 @@ ENV CONAN_HOME=/conan
 WORKDIR /workspace
 COPY conanfile.py ./
 COPY conan ./conan
-COPY scripts/conan-configure-remotes.sh scripts/conan-install.sh scripts/run_with_progress.sh ./scripts/
+COPY scripts/conan-cache-guard.sh scripts/conan-configure-remotes.sh \
+     scripts/conan-install.sh scripts/run_with_progress.sh ./scripts/
 
 FROM build-base AS release-dependencies
 RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
