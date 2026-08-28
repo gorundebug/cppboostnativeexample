@@ -2,6 +2,8 @@
 set -euo pipefail
 
 root="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+source "$root/scripts/conan-cache-guard.sh"
+dependency_conan_cache_guard "$0" "$@"
 build_type="${1:-Release}"
 output_dir="${2:-$root/build/conan-${build_type,,}}"
 profile="${CPPBOOSTNATIVE_CONAN_PROFILE:-}"
@@ -53,10 +55,9 @@ conan install "$root" \
   --output-folder="$output_dir" \
   "${@:3}"
 
-mapfile -t toolchains < <(find "$output_dir" -type f \
-  -name conan_toolchain.cmake -print)
-if [[ "${#toolchains[@]}" -ne 1 ]]; then
-  echo "expected exactly one Conan toolchain below $output_dir, found ${#toolchains[@]}" >&2
+toolchain="$output_dir/conan_toolchain.cmake"
+if [[ ! -f "$toolchain" ]]; then
+  echo "Conan toolchain is missing: $toolchain" >&2
   exit 2
 fi
-printf '%s\n' "${toolchains[0]}" >"$output_dir/toolchain.path"
+printf '%s\n' "$toolchain" >"$output_dir/toolchain.path"

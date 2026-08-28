@@ -2,6 +2,8 @@
 set -euo pipefail
 
 root="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+source "$root/scripts/conan-cache-guard.sh"
+dependency_conan_cache_guard "$0" "$@"
 mkdir -p "$root/conan/locks"
 "$root/scripts/conan-configure-remotes.sh"
 

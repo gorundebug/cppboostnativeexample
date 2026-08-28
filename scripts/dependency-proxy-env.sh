@@ -6,6 +6,7 @@ if [[ -n "${DEPENDENCY_PROXY_DIR:-}" ]]; then
   proxy_port="${DEPENDENCY_PROXY_PORT:-18081}"
   proxy_base="http://${proxy_host}:${proxy_port}/repository"
 
+  export DEPENDENCY_CONAN_HOME="${DEPENDENCY_PROXY_DIR}/conan2"
   export DEPENDENCY_DOCKER_REGISTRY="${proxy_client_host}:${DEPENDENCY_PROXY_DOCKER_PORT:-18083}"
   export DEPENDENCY_CONAN_REMOTE_URL="${proxy_base}/conan-proxy"
   export PIP_INDEX_URL="${proxy_base}/pypi-proxy/simple"
