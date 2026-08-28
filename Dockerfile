@@ -1,5 +1,5 @@
-# syntax=docker/dockerfile:1
-FROM ubuntu:24.04 AS build-base
+ARG DEPENDENCY_DOCKER_REGISTRY=docker.io
+FROM ${DEPENDENCY_DOCKER_REGISTRY}/library/ubuntu:24.04 AS build-base
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
 ARG SERVICEGEN_APT_UBUNTU_ARCHIVE_URL=
@@ -149,7 +149,7 @@ RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cach
        ctest --test-dir build-tsan --output-on-failure \
     && ./scripts/sanitizer_integration.sh build-tsan tsan
 
-FROM ubuntu:24.04 AS runtime
+FROM ${DEPENDENCY_DOCKER_REGISTRY}/library/ubuntu:24.04 AS runtime
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
 ARG SERVICEGEN_APT_UBUNTU_ARCHIVE_URL=
