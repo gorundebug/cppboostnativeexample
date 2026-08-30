@@ -1,17 +1,17 @@
 .PHONY: docker-build docker-test docker-asan docker-tsan docker-up docker-down conan-lock clean
 
 docker-build:
-	@./scripts/docker-build-target.sh inventoryservice cppboostnativeexample-inventoryservice:latest
-	@./scripts/docker-build-target.sh orderservice cppboostnativeexample-orderservice:latest
+	@./scripts/docker-build-target.sh inventoryservice cppboostnativeexample-inventoryservice:local
+	@./scripts/docker-build-target.sh orderservice cppboostnativeexample-orderservice:local
 
 docker-test:
-	@./scripts/docker-build-target.sh test cppboostnativeexample-test:latest
+	@./scripts/docker-build-target.sh test cppboostnativeexample-test:local
 
 docker-asan:
-	@./scripts/docker-build-target.sh asan-test cppboostnativeexample-asan-test:latest
+	@./scripts/docker-build-target.sh asan-test cppboostnativeexample-asan-test:local
 
 docker-tsan:
-	@./scripts/docker-build-target.sh tsan-test cppboostnativeexample-tsan-test:latest
+	@./scripts/docker-build-target.sh tsan-test cppboostnativeexample-tsan-test:local
 
 docker-up: docker-build
 	@bash -c 'source scripts/dependency-proxy-env.sh && docker compose up -d --no-build'

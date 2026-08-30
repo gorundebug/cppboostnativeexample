@@ -9,7 +9,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-docker build --target test -t cppboostnativeexample-test:latest .
+docker build --target test -t cppboostnativeexample-test:local .
 docker compose build
 docker compose up --detach --no-build
 
