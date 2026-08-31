@@ -42,7 +42,9 @@ FROM build-base AS release-dependencies
 RUN --mount=type=cache,id=cppboostnative-ccache-${TARGETARCH},target=/root/.cache/ccache \
     --mount=type=cache,id=servicegen-conan2-${TARGETARCH},target=/conan,sharing=locked \
     ./scripts/run_with_progress.sh "Conan Release install" \
-      ./scripts/conan-install.sh Release /workspace/build/conan-release
+      ./scripts/conan-install.sh Release /workspace/build/conan-release \
+        --deployer=runtime_deploy \
+        --deployer-folder=/workspace/build/runtime-deploy
 
 FROM release-dependencies AS release-build
 COPY CMakeLists.txt ./
@@ -168,6 +170,8 @@ RUN --mount=type=cache,id=servicegen-apt-lists-${TARGETARCH},target=/var/lib/apt
     --mount=type=cache,id=servicegen-apt-cache-${TARGETARCH},target=/var/cache/apt,sharing=locked \
     apt-get update \
     && apt-get install --yes --no-install-recommends ca-certificates
+COPY --from=release-build /workspace/build/runtime-deploy/ /usr/local/lib/
+RUN ldconfig
 
 FROM runtime AS inventoryservice
 COPY --from=release-build /workspace/build-release/inventoryservice /usr/local/bin/inventoryservice

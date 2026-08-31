@@ -25,7 +25,7 @@ class CppBoostNativeExampleConan(ConanFile):
         self.options["grpc"].shared = False
         self.options["grpc"].codegen = True
         self.options["asio-grpc"].backend = "boost"
-        self.options["jemalloc"].shared = False
+        self.options["jemalloc"].shared = True
 
     def requirements(self):
         self.requires(f"boost/{VERSIONS['boost']}", override=True)
