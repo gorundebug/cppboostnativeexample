@@ -27,6 +27,7 @@ if [[ -z "$profile" ]]; then
 fi
 
 "$root/scripts/conan-configure-remotes.sh"
+"$root/scripts/conan-export-recipes.sh"
 conan_home="$(conan config home)"
 install -m 0644 "$root/conan/settings_user.yml" \
   "$conan_home/settings_user.yml"
@@ -48,6 +49,8 @@ conan install "$root" \
   --profile:build "$profile" \
   -s:h "build_type=$build_type" \
   -s:b "build_type=$build_type" \
+  -o:h "openssl/*:no_engine=False" \
+  -o:b "openssl/*:no_engine=False" \
   --build=missing \
   -cc "core.sources:download_cache=$source_download_cache" \
   -c "tools.cmake.cmaketoolchain:user_presets=" \

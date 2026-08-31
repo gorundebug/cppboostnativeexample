@@ -30,7 +30,9 @@ class CppBoostNativeExampleConan(ConanFile):
     def requirements(self):
         self.requires(f"boost/{VERSIONS['boost']}", override=True)
         self.requires(f"protobuf/{VERSIONS['protobuf']}", override=True)
-        self.requires(f"grpc/{VERSIONS['grpc']}", override=True)
+        self.requires(
+            f"grpc/{VERSIONS['grpc']}@gorundebug/boost", override=True
+        )
         self.requires(f"asio-grpc/{VERSIONS['asio-grpc']}")
         self.requires(f"jemalloc/{VERSIONS['jemalloc']}")
 
