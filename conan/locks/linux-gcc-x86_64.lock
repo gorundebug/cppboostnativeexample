@@ -7,12 +7,12 @@
         "openssl/3.6.3#a81313131c78c6414f25b5fe0a83204b%1783446193.901",
         "libbacktrace/cci.20210118#a7691bfccd8caaf66309df196790a5a1%1722218217.276",
         "jemalloc/5.3.1#1fc58d55316041f10fbc1e8a2eae632a%1776700028.228",
-        "grpc/1.71.0@gorundebug/boost#97da307dacad1022d8c1287c33b93b3f%1788092258.3252897",
+        "grpc/1.71.0@gorundebug/boost#97da307dacad1022d8c1287c33b93b3f%1788489104.1128926",
         "c-ares/1.34.8#074b97a9e38159813ed5e2dcfeb290ca%1784539118.141",
         "bzip2/1.0.8#c470882369c2d95c5c77e970c0c7e321%1762886692.465",
         "boost/1.89.0#d33af727b3a9273b5770205fdf886fd1%1783338728.884",
         "asio-grpc/3.5.0#8f92f9e9625afe8fe2c6938a8ca22ca3%1768325511.174",
-        "abseil/20240722.1#23fab6de6fb8f7dec1256e65e4dc3f5e%1773137905.064"
+        "abseil/20250127.0#e0dcc4b8a367edb49b062cb07ed8e9e6%1773137903.431"
     ],
     "build_requires": [
         "zlib/1.3.2#1cb806da49011867778ffb6ac7190fcb%1777558780.503",
@@ -23,17 +23,18 @@
         "b2/5.5.3#043a75bcbb090e3f81f7ac849850d0ca%1784261134.143",
         "automake/1.16.5#b91b7c384c3deaa9d535be02da14d04f%1755524470.56",
         "autoconf/2.71#51077f068e61700d65bb05541ea1e4b0%1731054366.86",
-        "abseil/20240722.1#23fab6de6fb8f7dec1256e65e4dc3f5e%1773137905.064"
+        "abseil/20250127.0#e0dcc4b8a367edb49b062cb07ed8e9e6%1773137903.431"
     ],
     "python_requires": [],
     "overrides": {
         "grpc/[>=1.67.1 <2]": [
-            "grpc/1.71.0"
+            "grpc/1.71.0@gorundebug/boost"
         ],
         "boost/1.88.0": [
             "boost/1.89.0"
         ],
-        "protobuf/5.27.0": [
+        "protobuf/5.29.3": [
+            null,
             "protobuf/5.29.3"
         ]
     },

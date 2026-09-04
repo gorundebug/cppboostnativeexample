@@ -8,5 +8,8 @@ compiler.libcxx=libc++
 compiler.cppstd=20
 build_type=Release
 
+[replace_requires]
+openssl/*: openssl/3.6.3
+
 [conf]
 tools.cmake.cmaketoolchain:generator=Ninja
