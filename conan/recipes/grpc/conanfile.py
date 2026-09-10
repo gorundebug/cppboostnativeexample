@@ -116,9 +116,9 @@ class GrpcConan(ConanFile):
             transitive_headers=True,
             transitive_libs=True,
         )
+        self.requires(f"re2/{VERSIONS['re2']}")
         self.requires("c-ares/[>=1.19.1 <2]")
         self.requires("openssl/[>=1.1 <4]")
-        self.requires(f"re2/{VERSIONS['re2']}")
         self.requires("zlib/[>=1.2.11 <2]")
         if self.options.get_safe("with_libsystemd"):
             if Version(self.version) >= "1.67.0":
