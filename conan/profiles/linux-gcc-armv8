@@ -9,7 +9,10 @@ compiler.cppstd=20
 build_type=Release
 
 [replace_requires]
+abseil/*: abseil/20260526.0
 openssl/*: openssl/3.6.3
+protobuf/*: protobuf/6.33.5
+re2/*: re2/20251105
 
 [conf]
 tools.cmake.cmaketoolchain:generator=Ninja
