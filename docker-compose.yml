@@ -1,6 +1,6 @@
 services:
   inventoryservice:
-    image: cppboostnativeexample-inventoryservice:local
+    image: cppboostnativeexample-inventoryservice:${DOCKER_IMAGE_TAG:-local}
     build:
       context: .
       target: inventoryservice
@@ -25,7 +25,7 @@ services:
     networks: [app_net]
 
   orderservice:
-    image: cppboostnativeexample-orderservice:local
+    image: cppboostnativeexample-orderservice:${DOCKER_IMAGE_TAG:-local}
     build:
       context: .
       target: orderservice

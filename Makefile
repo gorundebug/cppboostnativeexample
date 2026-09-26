@@ -1,8 +1,9 @@
 .PHONY: docker-build docker-test docker-asan docker-tsan docker-up docker-down conan-lock clean
+DOCKER_IMAGE_TAG ?= local
 
 docker-build:
-	@./scripts/docker-build-target.sh inventoryservice cppboostnativeexample-inventoryservice:local
-	@./scripts/docker-build-target.sh orderservice cppboostnativeexample-orderservice:local
+	@./scripts/docker-build-target.sh inventoryservice cppboostnativeexample-inventoryservice:$(DOCKER_IMAGE_TAG)
+	@./scripts/docker-build-target.sh orderservice cppboostnativeexample-orderservice:$(DOCKER_IMAGE_TAG)
 
 docker-test:
 	@./scripts/docker-build-target.sh test cppboostnativeexample-test:local
