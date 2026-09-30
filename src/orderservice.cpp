@@ -1,11 +1,3 @@
-#include "common.hpp"
-
-#include <agrpc/client_rpc.hpp>
-#include <boost/asio/use_awaitable.hpp>
-#include <boost/json.hpp>
-#include <boost/system/system_error.hpp>
-#include <grpcpp/create_channel.h>
-
 #include <array>
 #include <chrono>
 #include <cmath>
@@ -16,7 +8,14 @@
 #include <sstream>
 #include <vector>
 
+#include <agrpc/client_rpc.hpp>
+#include <boost/asio/use_awaitable.hpp>
+#include <boost/json.hpp>
+#include <boost/system/system_error.hpp>
+#include <grpcpp/create_channel.h>
 #include <proto/inventoryserviceapi.grpc.pb.h>
+
+#include "common.hpp"
 
 namespace native_example {
 

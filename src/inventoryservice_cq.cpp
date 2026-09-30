@@ -1,7 +1,3 @@
-#include "common.hpp"
-
-#include <grpcpp/server.h>
-
 #include <atomic>
 #include <csignal>
 #include <iostream>
@@ -12,7 +8,10 @@
 #include <unordered_map>
 #include <vector>
 
+#include <grpcpp/server.h>
 #include <proto/inventoryserviceapi.grpc.pb.h>
+
+#include "common.hpp"
 
 namespace native_example::cq_diagnostic {
 

@@ -1,4 +1,8 @@
-#include "common.hpp"
+#include <chrono>
+#include <atomic>
+#include <iostream>
+#include <memory>
+#include <unordered_map>
 
 #include <agrpc/register_awaitable_rpc_handler.hpp>
 #include <agrpc/server_rpc.hpp>
@@ -6,14 +10,9 @@
 #include <boost/asio/this_coro.hpp>
 #include <boost/asio/use_awaitable.hpp>
 #include <grpcpp/server.h>
-
-#include <chrono>
-#include <atomic>
-#include <iostream>
-#include <memory>
-#include <unordered_map>
-
 #include <proto/inventoryserviceapi.grpc.pb.h>
+
+#include "common.hpp"
 
 namespace native_example {
 

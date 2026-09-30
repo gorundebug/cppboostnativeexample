@@ -1,8 +1,8 @@
-#include "common.hpp"
-
 #include <cassert>
 #include <chrono>
 #include <cstdlib>
+
+#include "common.hpp"
 
 int main() {
   using namespace std::chrono_literals;

@@ -1,6 +1,19 @@
 #pragma once
 
 #include <utility>
+#include <atomic>
+#include <charconv>
+#include <chrono>
+#include <cctype>
+#include <csignal>
+#include <cstdlib>
+#include <functional>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <thread>
+#include <vector>
 
 #include <agrpc/grpc_context.hpp>
 #include <agrpc/grpc_executor.hpp>
@@ -19,20 +32,6 @@
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <grpcpp/server_builder.h>
-
-#include <atomic>
-#include <charconv>
-#include <chrono>
-#include <cctype>
-#include <csignal>
-#include <cstdlib>
-#include <functional>
-#include <memory>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <thread>
-#include <vector>
 
 namespace native_example {
 
