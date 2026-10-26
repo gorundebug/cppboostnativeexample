@@ -114,6 +114,10 @@ class GrpcConan(ConanFile):
         self.requires(f"protobuf/{VERSIONS['protobuf']}", transitive_headers=True)
         self.requires(
             f"abseil/{VERSIONS['abseil']}",
+            # This recipe is also consumed as a build tool. The SDK's host
+            # override does not reach that graph, so enforce the same pinned
+            # version against Protobuf's transitive range here as well.
+            force=True,
             transitive_headers=True,
             transitive_libs=True,
         )
